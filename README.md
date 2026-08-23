@@ -20,6 +20,7 @@
 - **Cloud:** A hosted environment where workflows run securely on cloud infrastructure without requiring local server management
 - **Instance:** An isolated, running environment or deployment of an application (such as an n8n installation) containing its own workflows, data, and settings
 
+## Integrations
 [First Integration](./workflows/first%20integration.json): It integrates Google Sheets and Marketstack as AI tools to retrieve, manage, and update portfolio data based on financial queries.
 
 [Second Integration](./workflows/second%20integratio.json): It integrates Gmail tools to retrieve recent messages (filtered by the last 5 days) and send automated emails to tuncaydataengineer@gmail.com.
