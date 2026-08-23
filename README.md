@@ -24,3 +24,7 @@
 [First Integration](./workflows/first%20integration.json): It integrates Google Sheets and Marketstack as AI tools to retrieve, manage, and update portfolio data based on financial queries.
 
 [Second Integration](./workflows/second%20integratio.json): It integrates Gmail tools to retrieve recent messages (filtered by the last 5 days) and send automated emails to tuncaydataengineer@gmail.com.
+
+[Push Motification](./workflows/push_notifications.json): It incorporates Pushover and Date & Time tools as AI capabilities to process requests and send automated push notifications. To run this workflow successfully, you must obtain both a User Key and an Application Key directly from pushover.net.
+
+[Telegram Notification](./workflows/telegram_notifications.json): This n8n workflow integrates a Telegram Trigger to capture incoming chat messages and route them through an OpenAI-powered AI Agent equipped with a Date & Time tool. Within the AI Agent configuration, the prompt (User Message) is explicitly set to `{{ $json.message.text }}` to dynamically process incoming texts. The Simple Memory node uses a custom key configured as `{{ $json.message.chat.id }}` to track individual user sessions uniquely. Finally, the Send a text message node responds back to the correct chat by mapping the Chat ID to `{{ $('Telegram Trigger').item.json.message.chat.id }}` and the output text to `{{ $json.output }}`.
