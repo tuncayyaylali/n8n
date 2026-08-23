@@ -1,0 +1,9 @@
+# AI Builder Course
+
+## 5 Tricks and 1 Trap in Agentic AI
+- **Illusion of Memory (Bellek Yanılsaması):** LLM'ler doğası gereği stateless'tir (hafızaları yoktur, her isteği sıfırdan işlerler). Buradaki "hile", sisteme her seferinde geçmiş sohbet/bağlam pencerelerini ekleyerek kullanıcıya kesintisiz bir hafızası varmış illüzyonu yaşatılmasıdır.
+- **Thinking / Reasoning (Düşünme / Akıl Yürütme):** Modelin sadece anlık cevap üretmek yerine; karmaşık bir görevi alt adımlara bölmesi (Chain-of-Thought), plan yapması ve "Önce ne yapmalıyım?" diye mantık süzgecinden geçirmesidir.
+- **Chaining LLMs (LLM Zincirleme):** Tek bir modelin her şeyi kusursuz yapamayacağı durumlarda, birden fazla modelin veya prompt adımının birbirine bağlanmasıdır (Örn: Bir modelin çıkışı, diğerinin girdisi olur; biri metin yazar, diğeri kodu kontrol eder).
+- **Tools (Araçlar):** Yapay zekanın sadece kendi içindeki veriyle sınırlı kalmayıp; web araması yapması, veritabanına bağlanması (örneğin PostgreSQL), API'leri tetiklemesi (Marketstack vb.) veya kod çalıştırması gibi dış dünyayla etkileşime geçmesini sağlayan yetenekleridir.
+- **The Loop (Döngü):** Ajanın doğrusal (tek yönlü) çalışmak yerine; bir görevi yapıp sonucu değerlendirmesi, hata alırsa (örneğin senin yaşadığın Marketstack tarih hatası gibi) hatayı görüp parametreleri değiştirerek hedefe ulaşana kadar süreci kendi kendine tekrarlamasıdır (ReAct döngüsü).
+- **The Human Trap (İnsan Tuzağı):** Sistemin her şeyi tamamen otonom yapabileceğine güvenip insan denetimini (Human-in-the-loop) tamamen ortadan kaldırmaktır. Ajanlar halüsinasyon görebilir, sonsuz döngüye girebilir veya yanlış bir aracı tetikleyip sistemi bozabilir. En büyük tuzak, yapay zekayı tamamen başıboş bırakmaktır; kritik kararlarda insanın onay vermesi her zaman emniyet supaplı olmalıdır.
