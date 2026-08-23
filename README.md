@@ -11,9 +11,15 @@
 - **The Loop (Döngü):** Ajanın doğrusal (tek yönlü) çalışmak yerine; bir görevi yapıp sonucu değerlendirmesi, hata alırsa (örneğin senin yaşadığın Marketstack tarih hatası gibi) hatayı görüp parametreleri değiştirerek hedefe ulaşana kadar süreci kendi kendine tekrarlamasıdır (ReAct döngüsü).
 - **The Human Trap (İnsan Tuzağı):** Sistemin her şeyi tamamen otonom yapabileceğine güvenip insan denetimini (Human-in-the-loop) tamamen ortadan kaldırmaktır. Ajanlar halüsinasyon görebilir, sonsuz döngüye girebilir veya yanlış bir aracı tetikleyip sistemi bozabilir. En büyük tuzak, yapay zekayı tamamen başıboş bırakmaktır; kritik kararlarda insanın onay vermesi her zaman emniyet supaplı olmalıdır.
 
-## n8n Terminology,
+## N8N Terminology
 - **Node:** A single step in a business process can be a Trigger or an Action
 - **Connection:** A link - passes data from the output of one node to the input of another
 - **Workflow:** A collection of nodes connected together to automate a process
 - **Execution:** A single run of a workflow; can be Manual (testing) or Active (production)
 - **Templates:** A prebuilt workflow that you can use as a starting point
+- **Cloud:** A hosted environment where workflows run securely on cloud infrastructure without requiring local server management
+- **Instance:** An isolated, running environment or deployment of an application (such as an n8n installation) containing its own workflows, data, and settings
+
+[First Integration](./workflows/first%20integration.json): It integrates Google Sheets and Marketstack as AI tools to retrieve, manage, and update portfolio data based on financial queries.
+
+[Second Integration](./workflows/second%20integratio.json): It integrates Gmail tools to retrieve recent messages (filtered by the last 5 days) and send automated emails to tuncaydataengineer@gmail.com.
