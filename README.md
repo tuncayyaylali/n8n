@@ -28,3 +28,43 @@
 [Push Motification](./workflows/push_notifications.json): It incorporates Pushover and Date & Time tools as AI capabilities to process requests and send automated push notifications. To run this workflow successfully, you must obtain both a User Key and an Application Key directly from pushover.net.
 
 [Telegram Notification](./workflows/telegram_notifications.json): This n8n workflow integrates a Telegram Trigger to capture incoming chat messages and route them through an OpenAI-powered AI Agent equipped with a Date & Time tool. Within the AI Agent configuration, the prompt (User Message) is explicitly set to `{{ $json.message.text }}` to dynamically process incoming texts. The Simple Memory node uses a custom key configured as `{{ $json.message.chat.id }}` to track individual user sessions uniquely. Finally, the Send a text message node responds back to the correct chat by mapping the Chat ID to `{{ $('Telegram Trigger').item.json.message.chat.id }}` and the output text to `{{ $json.output }}`.
+
+## Different Types of Nodes
+- **Core Node:** Workflow' un temel yapı taşını oluşturan her bir adımdır. Bir Core Node temel olarak şu operasyonları gerçekleştirir:
+    - Trigger: Bir iş akışını başlatan ilk adımdır (Örn: Gelen bir webhook, zamanlayıcı veya sohbet mesajı).
+    - Action: Tetiklendikten sonra arka planda yapılan spesifik bir görev veya işlemdir (Örn: Veritabanına kayıt eklemek, e-posta göndermek).
+- **Sub-node:** Ana bir node'un işlevini yerine getirebilmesi için ona bağlanan ve onun yapı taşı olan yardımcı bileşenlerdir (Örn: Yapay zeka ajanının kullandığı harici bir araç veya fonksiyon).
+- **Cluster Node:** n8n'de özellikle gelişmiş bileşenlerde (LangChain entegrasyonlarında vb.) görülen, tek bir adım gibi görünmesine rağmen aslında birden fazla bileşeni barındıran yapılandırılmış node gruplarıdır. Yapısı şöyledir:
+    - One root node: Süreci yöneten merkezî ana bileşen.
+    - One or more sub-nodes: Ana node'a bağlı olarak çalışan yardımcı alt bileşenler.
+- **Example of Cluster Node: AI Agent** n8n'deki AI Agent düğümü tipik bir Cluster Node yapısıdır; ortada ana beyin (Root node) bulunur, etrafına ise hafıza (Memory) veya araçlar (Tools) gibi sub-node'lar bağlanarak ortak bir çalışma kümesi oluşturur.
+
+## Nodes Work With Items
+
+- **Data flows in as an array of items:** n8n'de veriler tekil olarak değil, bir item dizisi (array) şeklinde akar. Örneğin bir node'a giriş yapan veri yapısı şu şekildedir:
+```json
+[
+  {"fruit": "apples"},
+  {"fruit": "bananas"}
+]
+```
+
+- **An expression is applied to every item** Yazılan bir ifade (expression) array' deki her bir item'a tek tek (otomatik olarak döngüye girmiş gibi) uygulanır. Örneğin şu ifade kullanıldığında:
+```json
+{{ $json.fruit.toUpperCase() }}
+```
+
+- Çıktıdaki tüm meyve isimleri büyük harfe dönüştürülür:
+```json
+[
+  {"fruit": "APPLES"},
+  {"fruit": "BANANAS"}
+]
+```
+
+- **Key Notes:** 
+    - $json kısayolu: `$json`, aslında `$input.item.json` ifadesinin daha kısa ve pratik bir yazılışıdır. İşlem yapılan o anki item'ın JSON verisine hızlıca erişmeyi sağlar.
+    - Çoklu veri yönetimi: Şimdiye kadar yapılan basit örneklerin aksine, n8n altyapısı bu şekilde tek seferde birden fazla item (öğe) içeren array' leri işleme yeteneğine sahiptir.
+
+
+[Equity Portfolio Rebalancer](./workflows/equity_portfolio_rebalancer.json): This n8n workflow automates portfolio rebalancing by triggering an AI Agent via a web form submission to achieve a target asset allocation. The AI Agent dynamically interacts with Google Sheets and Marketstack to fetch financial data, execute trades, and update records iteratively until the target is met. Finally, it validates the results using an IF condition to send success or failure notifications via Pushover and Gmail.
