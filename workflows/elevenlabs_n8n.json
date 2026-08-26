@@ -1,0 +1,163 @@
+{
+  "name": "elevenlabs_n8n",
+  "nodes": [
+    {
+      "parameters": {
+        "path": "4d039738-17cb-4732-b75d-e666026731d7",
+        "responseMode": "responseNode",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 2.1,
+      "position": [
+        -448,
+        -64
+      ],
+      "id": "378b84fc-c866-4fbe-9b48-a952e521c821",
+      "name": "Webhook",
+      "webhookId": "4d039738-17cb-4732-b75d-e666026731d7"
+    },
+    {
+      "parameters": {
+        "promptType": "define",
+        "text": "{{ $json.body.question }}",
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.agent",
+      "typeVersion": 3.1,
+      "position": [
+        -208,
+        -64
+      ],
+      "id": "524c8fad-3b04-4c82-8c83-d334966120cf",
+      "name": "AI Agent"
+    },
+    {
+      "parameters": {
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.lmChatGoogleGemini",
+      "typeVersion": 1.1,
+      "position": [
+        -352,
+        144
+      ],
+      "id": "47fb65f8-ae9a-4884-8272-aebce1b67207",
+      "name": "Google Gemini Chat Model",
+      "credentials": {
+        "googlePalmApi": {
+          "id": "hjORKdlMxo5g6aEf",
+          "name": "Google Gemini(PaLM) Api account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "descriptionType": "manual",
+        "toolDescription": "Use this tool to retrieve the equity portfolio of the user to answer questions about their holdings",
+        "documentId": {
+          "__rl": true,
+          "value": "1HodOSo-ABkLHWtpJOLyy9hdGRmeiVMWwK6AElG9QYGI",
+          "mode": "list",
+          "cachedResultName": "portfolio",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1HodOSo-ABkLHWtpJOLyy9hdGRmeiVMWwK6AElG9QYGI/edit?usp=drivesdk"
+        },
+        "sheetName": {
+          "__rl": true,
+          "value": "gid=0",
+          "mode": "list",
+          "cachedResultName": "Sayfa1",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1HodOSo-ABkLHWtpJOLyy9hdGRmeiVMWwK6AElG9QYGI/edit#gid=0"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleSheetsTool",
+      "typeVersion": 4.7,
+      "position": [
+        -64,
+        144
+      ],
+      "id": "4635c7a1-34ba-495c-af44-bb90b1a480f8",
+      "name": "Get row(s) in sheet in Google Sheets",
+      "credentials": {
+        "googleSheetsOAuth2Api": {
+          "id": "MofnM9lVfmq0e8eK",
+          "name": "Google Sheets account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "options": {}
+      },
+      "type": "n8n-nodes-base.respondToWebhook",
+      "typeVersion": 1.5,
+      "position": [
+        160,
+        -64
+      ],
+      "id": "812091ea-79bb-4986-81a8-ef85eccaca16",
+      "name": "Respond to Webhook"
+    }
+  ],
+  "pinData": {},
+  "connections": {
+    "Webhook": {
+      "main": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Google Gemini Chat Model": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Get row(s) in sheet in Google Sheets": {
+      "ai_tool": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "AI Agent": {
+      "main": [
+        [
+          {
+            "node": "Respond to Webhook",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": true,
+  "settings": {
+    "executionOrder": "v1",
+    "binaryMode": "separate"
+  },
+  "versionId": "270ecea7-1fca-4509-a693-850449ebeb06",
+  "meta": {
+    "templateCredsSetupCompleted": true,
+    "instanceId": "b05a513306c705e333aa046341777c6b072643c41e657caf871cfb332dbcc63c"
+  },
+  "nodeGroups": [],
+  "id": "jeWI0DpZHHbPPiCn",
+  "tags": []
+}

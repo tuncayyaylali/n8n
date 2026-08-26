@@ -68,3 +68,45 @@
 
 
 [Equity Portfolio Rebalancer](./workflows/equity_portfolio_rebalancer.json): This n8n workflow automates portfolio rebalancing by triggering an AI Agent via a web form submission to achieve a target asset allocation. The AI Agent dynamically interacts with Google Sheets and Marketstack to fetch financial data, execute trades, and update records iteratively until the target is met. Finally, it validates the results using an IF condition to send success or failure notifications via Pushover and Gmail.
+
+## Deeper Terminology on APIs
+- **API**
+    - I'm calling an API by making an HTTP request to an endpoint.
+- **Webhook**
+    - I've set up a Webhook make an HTTP request there to notify me about X.
+    - Tell me your Webhook so I can notify you.
+
+![alt text](/images/image1.png)
+
+[N8N with Elevenlabs](./workflows/n8n_elevenlabs.json): This n8n workflow functions as an end-to-end voice assistant pipeline. It receives an audio file via a Webhook, transcribes it to text using ElevenLabs, and passes it to an AI Agent powered by Google Gemini to generate a smart response. Finally, ElevenLabs converts the AI's text reply back into spoken audio, which is sent back to the user as a binary response.
+
+[Elevenlabs with N8N](./workflows/elevenlabs_n8n.json): This n8n workflow acts as an automated API endpoint powered by an AI portfolio assistant. When a webhook receives a POST request with a question, it forwards the query to a Google Gemini AI Agent. Equipped with a Google Sheets tool, the agent dynamically accesses the user's equity portfolio spreadsheet to retrieve financial holdings, processes the data, and returns a smart, context-aware answer via the webhook response node.
+
+## RAG
+- An embedding model—often referred to interchangeably as an encoder or vector model—is an AI tool that converts text, images, or audio into numbers (vectors) that capture their semantic meaning. By placing similar concepts close to each other in a mathematical space, it allows computers to understand context, compare information, and power tasks like semantic search, recommendation systems, and AI retrieval (RAG).
+
+![alt text](./images/image2.png)
+
+- This diagram illustrates a Retrieval-Augmented Generation (RAG) workflow orchestrated by n8n. The process begins when a user submits a question through the chat interface to n8n. To find the right information, n8n interacts with a Vector Datastore, which stores pre-processed documents and data converted into numerical vectors by an Embedding LLM using a "vectorize" process. n8n queries this Vector Datastore to "retrieve" the most relevant contextual data matching the user's inquiry. Once this context is gathered, n8n combines it with the user's question to form a structured prompt, which is then sent to the main LLM. Finally, the LLM processes this prompt, generates a response back to n8n, and n8n delivers the final answer to the user through the chat interface.
+
+## RAG vs Agentic RAG
+
+![alt text](./images/image3.png)
+
+![alt text](./images/image4.png)
+
+- **Data Ingestion (Top):** Raw data from a source is extracted, transformed, split into smaller pieces and vectorized (Chunk & Vectorize), and then loaded into a Vector Store.
+    - Chunking and Vectorization are critical steps in preparing data for semantic search within a RAG pipeline.
+    - Chunking involves breaking down large documents, such as PDFs or web pages, into smaller, manageable pieces (like paragraphs or sentence groups) while preserving their contextual meaning. This is necessary because feeding an entire, lengthy document to an AI model is inefficient and leads to context loss, whereas smaller chunks allow for precise retrieval of relevant information. Vectorization, on the other hand, takes these individual text chunks and passes them through an embedding model to transform them into high-dimensional numerical arrays or vectors. This mathematical conversion captures the semantic relationships between words, enabling the system to compare a user's query vector against the database vectors and quickly find the most relevant matches based on similarity scores.
+
+## Vector Database
+
+[Vector Database](./scripts/vector_database.sql): This SQL code creates a vector search structure in a PostgreSQL database (typically using the pgvector extension) to power a RAG (Retrieval-Augmented Generation) system. It consists of two main parts:
+- Table Creation (knowledgebase): Sets up a table with an id, text content, JSONB metadata for filtering, and an embedding vector field (dimension size 1536, matching OpenAI embedding models) to store document chunks.
+- Similarity Search Function (match_documents): Defines a custom SQL function that takes a query embedding, compares it against stored document vectors using cosine distance (<=>), applies any JSONB metadata filters, and returns the top matching results ordered by relevance similarity.
+
+[Supabase](./workflows/supabase.json): This JSON workflow automates the process of extracting product data from a Google Sheets document and storing it as vector embeddings in a Supabase database for an AI-powered RAG (Retrieval-Augmented Generation) pipeline. Here is a step-by-step breakdown of how the workflow operates:
+- Trigger & Data Retrieval: The workflow is initiated manually (When clicking ‘Execute workflow’) and fetches product rows containing fields like name, category, SKU, price, and description from a Google Sheets file using the Get row(s) in sheet node.
+- Data Preparation: The Edit Fields node formats the raw spreadsheet columns into a structured text block (content) and a separate category field for metadata tracking.
+- Embedding & Loading: The Default Data Loader converts the processed text into documents, while the Embeddings OpenAI node generates vector representations using OpenAI's embedding models.
+- Vector Storage: Finally, the Supabase Vector Store node inserts these vector embeddings and metadata into the knowledgebase table in Supabase, making the product catalog searchable via semantic similarity.
