@@ -110,3 +110,32 @@
 - Data Preparation: The Edit Fields node formats the raw spreadsheet columns into a structured text block (content) and a separate category field for metadata tracking.
 - Embedding & Loading: The Default Data Loader converts the processed text into documents, while the Embeddings OpenAI node generates vector representations using OpenAI's embedding models.
 - Vector Storage: Finally, the Supabase Vector Store node inserts these vector embeddings and metadata into the knowledgebase table in Supabase, making the product catalog searchable via semantic similarity.
+
+[Agentic RAG](./workflows/agentic_rag.json): This JSON workflow implements an **Agentic RAG (Retrieval-Augmented Generation)** system exposed via an API endpoint, allowing an intelligent AI agent to answer dynamic user queries using a vector database. Here is a step-by-step breakdown of how the workflow operates:
+- **Trigger & Request Handling:** The workflow starts with an incoming HTTP **Webhook** that receives user questions through a POST request body (`{{ $json.body.question }}`).
+- **Core Agent Intelligence:** The **AI Agent** processes the prompt using the **Google Gemini Chat Model** as its underlying reasoning engine, managing the conversational logic and decision-making process.
+- **Vector Tool Integration:** The **Supabase Vector Store** is connected to the agent as an **AI Tool** (`retrieve-as-tool`), utilizing **OpenAI Embeddings** to semantically search the `knowledgebase` table whenever product or company information is needed.
+- **Response Delivery:** Once the agent formulates its answer based on the retrieved context, the **Respond to Webhook** node sends the final output back to the client.
+
+## Selh Hosted N8N
+[N8N with Docker] (https://docs.n8n.io/deploy/host-n8n/install-options/install-with-docker)
+
+```bash
+docker volume create n8n_data
+
+docker run -it --rm \
+  --name n8n \
+  -p 5678:5678 \
+  --add-host=host.docker.internal:host-gateway \
+  -e GENERIC_TIMEZONE="Europe/Istanbul" \
+  -e TZ="Europe/Istanbul" \
+  -e N8N_ENFORCE_SETTINGS_FILE_PERMISSIONS=true \
+  -e N8N_RUNNERS_ENABLED=true \
+  -v n8n_data:/home/node/.n8n \
+  docker.n8n.io/n8nio/n8n
+```
+
+[Self Hosted First Workflow](./workflows/self_hosted_first_workflow.json): This n8n workflow establishes an AI Agent powered by a local Ollama model (ministral-3), configured with chat trigger input and window buffer memory to maintain contextual conversations. The agent is equipped with two custom tools—a Google Sheets integration to retrieve computer hardware product details and a Marketstack tool for querying real-time financial market data—directed by a specific system prompt that governs tool selection based on user queries.
+
+[From Google Drive to PDF](./workflows/from_drive_to_pdf.json): This n8n workflow monitors a specific Google Drive folder for newly created files and sends a notification via Pushover when a file arrives. It then downloads the file, extracts its text content using the Extract from File node, and sends the extracted text as a follow-up notification through Pushover.
+

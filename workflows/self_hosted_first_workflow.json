@@ -1,0 +1,261 @@
+{
+  "name": "self_hosted_first_workflow",
+  "nodes": [
+    {
+      "parameters": {
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.chatTrigger",
+      "typeVersion": 1.4,
+      "position": [
+        -576,
+        -16
+      ],
+      "id": "d325177a-3a78-4058-841d-fc89ecc9061d",
+      "name": "When chat message received",
+      "webhookId": "72a2ddcb-78b0-45a6-a205-39aa00ccb5c4"
+    },
+    {
+      "parameters": {
+        "options": {
+          "systemMessage": "Sen yardımsever bir asistansın. Eğer kullanıcı Piyasalar ile ilgili bir blgi sorarsa Marketstack aracını bilgisayar malzemeleri ile ilgili bir soru sorarsa Google_Sheet aracını kullan.\n\n## Tools\nGoogle_Sheet: Bilgisayar malzemeleri ile ilgili ürünlerin bilgileri var. \nMarketstack: Piyasa bilgileri var."
+        }
+      },
+      "type": "@n8n/n8n-nodes-langchain.agent",
+      "typeVersion": 3.1,
+      "position": [
+        -224,
+        -16
+      ],
+      "id": "e49186fa-bba8-4326-bbf7-083f8c16e6df",
+      "name": "AI Agent"
+    },
+    {
+      "parameters": {},
+      "type": "@n8n/n8n-nodes-langchain.memoryBufferWindow",
+      "typeVersion": 1.4,
+      "position": [
+        -216,
+        216
+      ],
+      "id": "dcc022f4-26d8-4e8a-b69f-dd4bd34730ed",
+      "name": "Simple Memory"
+    },
+    {
+      "parameters": {
+        "documentId": {
+          "__rl": true,
+          "value": "1HodOSo-ABkLHWtpJOLyy9hdGRmeiVMWwK6AElG9QYGI",
+          "mode": "list",
+          "cachedResultName": "portfolio",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1HodOSo-ABkLHWtpJOLyy9hdGRmeiVMWwK6AElG9QYGI/edit?usp=drivesdk"
+        },
+        "sheetName": {
+          "__rl": true,
+          "value": 1470640286,
+          "mode": "list",
+          "cachedResultName": "Products",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1HodOSo-ABkLHWtpJOLyy9hdGRmeiVMWwK6AElG9QYGI/edit#gid=1470640286"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleSheetsTool",
+      "typeVersion": 4.7,
+      "position": [
+        -88,
+        216
+      ],
+      "id": "c301a13f-b1f7-4c12-9ce6-b93874bc5ca0",
+      "name": "Google_Sheet",
+      "credentials": {
+        "googleSheetsOAuth2Api": {
+          "id": "SpxOnv1tFTQaij4P",
+          "name": "Google Sheets account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "symbols": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('Ticker', ``, 'string') }}",
+        "filters": {
+          "latest": true
+        }
+      },
+      "type": "n8n-nodes-base.marketstackTool",
+      "typeVersion": 1,
+      "position": [
+        40,
+        216
+      ],
+      "id": "f96abb1d-eeae-4cb6-8f0c-ca420114af50",
+      "name": "Marketstack",
+      "credentials": {
+        "marketstackApi": {
+          "id": "F4T7wWsfalcpR886",
+          "name": "Marketstack account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.lmChatGoogleGemini",
+      "typeVersion": 1.1,
+      "position": [
+        -568,
+        312
+      ],
+      "id": "a446a624-a932-4dfc-a433-f2df14789368",
+      "name": "Gemini",
+      "credentials": {
+        "googlePalmApi": {
+          "id": "3bclrBhQCvNbea5d",
+          "name": "Google Gemini(PaLM) Api account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "model": "ministral-3:latest",
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.lmChatOllama",
+      "typeVersion": 1,
+      "position": [
+        -344,
+        216
+      ],
+      "id": "863435ed-6820-4940-9de3-6ebf73a6eaab",
+      "name": "Ollama",
+      "credentials": {
+        "ollamaApi": {
+          "id": "lY0qospp60mCVP1O",
+          "name": "Ollama account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "content": "## Input",
+        "height": 224,
+        "width": 288
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        -672,
+        -80
+      ],
+      "typeVersion": 1,
+      "id": "9289434d-af23-4b0f-8a28-0d119a1c5219",
+      "name": "Sticky Note"
+    },
+    {
+      "parameters": {
+        "content": "## Processing",
+        "height": 448,
+        "width": 544
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        -384,
+        -96
+      ],
+      "typeVersion": 1,
+      "id": "a7857a6a-9a9a-4bf3-bb9b-a428760c33f3",
+      "name": "Sticky Note1"
+    },
+    {
+      "parameters": {
+        "content": "## Extra Chat Model",
+        "height": 224,
+        "width": 288
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        -672,
+        256
+      ],
+      "typeVersion": 1,
+      "id": "0e9f3312-1d6f-44ab-bc10-f8c09784c6e5",
+      "name": "Sticky Note2"
+    }
+  ],
+  "pinData": {},
+  "connections": {
+    "When chat message received": {
+      "main": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Simple Memory": {
+      "ai_memory": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "ai_memory",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Google_Sheet": {
+      "ai_tool": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Marketstack": {
+      "ai_tool": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Gemini": {
+      "ai_languageModel": [
+        []
+      ]
+    },
+    "Ollama": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": false,
+  "settings": {
+    "executionOrder": "v1",
+    "binaryMode": "separate",
+    "availableInMCP": false
+  },
+  "versionId": "1a928a24-f0b6-4ae4-9927-f1bbe9f9222c",
+  "meta": {
+    "templateCredsSetupCompleted": true,
+    "instanceId": "0afe99ccd446ce3b1ee36736677e60034629faeafa4dbd314f09ae18eafaed9a"
+  },
+  "nodeGroups": [],
+  "id": "nvvU6Qv2BniWUp02",
+  "tags": []
+}
